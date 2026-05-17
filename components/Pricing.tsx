@@ -48,7 +48,7 @@ const pricingPlans = [
 
 export default function Pricing() {
   return (
-    <div className="w-full max-w-5xl mx-auto mt-20 pt-16 border-t border-border/50 text-center pb-8 flex flex-col items-center overflow-hidden">
+    <div className="w-full max-w-6xl mx-auto mt-20 pt-16 border-t border-border/50 text-center pb-8 flex flex-col items-center overflow-hidden">
       <h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight text-foreground">
         Pricing Plans
       </h2>

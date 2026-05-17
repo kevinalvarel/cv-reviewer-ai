@@ -37,7 +37,7 @@ export default function FAQSection() {
   ];
 
   return (
-    <div className="w-full max-w-5xl mx-auto mt-24 pt-16 border-t border-border/50 relative">
+    <div className="w-full max-w-6xl mx-auto mt-24 pt-16 border-t border-border/50 relative">
       {/* Decorative background blobs */}
       <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10 mix-blend-multiply" />
       <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-primary/10 rounded-full blur-2xl -z-10 mix-blend-multiply" />

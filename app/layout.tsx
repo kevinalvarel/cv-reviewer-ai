@@ -27,11 +27,11 @@ export default function RootLayout({
       lang="en"
       className={cn("font-sans", geist.variable, architects.variable)}
     >
-      <body className="font-sans antialiased min-h-screen flex flex-col" suppressHydrationWarning>
-        <Navbar />
-        <main className="flex-1 flex flex-col">
-          {children}
-        </main>
+      <body
+        className="font-sans antialiased min-h-screen flex flex-col"
+        suppressHydrationWarning
+      >
+        <main className="flex-1 flex flex-col">{children}</main>
         <Footer />
       </body>
     </html>

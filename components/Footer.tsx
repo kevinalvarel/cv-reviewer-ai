@@ -5,7 +5,7 @@ import { Github } from "lucide-react";
 export default function Footer() {
   return (
     <footer className="w-full border-t border-border/50 bg-background/80 backdrop-blur-sm py-10 mt-auto">
-      <div className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex flex-col items-center md:items-start gap-2">
           <div className="font-black text-xl tracking-tight text-foreground">
             CV<span className="text-primary">Lint</span>
@@ -16,7 +16,10 @@ export default function Footer() {
         </div>
 
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
-          <Link href="#" className="hover:text-foreground transition-colors">
+          <Link
+            href="https://github.com/kevinalvarel"
+            className="hover:text-foreground transition-colors"
+          >
             <Github className="w-5 h-5" />
             <span className="sr-only">GitHub</span>
           </Link>

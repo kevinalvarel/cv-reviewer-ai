@@ -11,6 +11,7 @@ import FAQSection from "../components/FAQSection";
 import { cn } from "../components/DropzoneArea"; // Reusing cn utility
 import Image from "next/image";
 import Pricing from "@/components/Pricing";
+import Navbar from "@/components/Navbar";
 
 interface RecentAnalysis {
   id: number;
@@ -123,9 +124,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans pb-16">
+      <Navbar />
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-start pt-12 px-4 md:px-8">
-        <div className="w-full max-w-5xl mx-auto flex flex-col items-center text-center space-y-12">
+        <div className="w-full max-w-6xl mx-auto flex flex-col items-center text-center space-y-12">
           <div className="space-y-6 mt-4">
             <div className="relative py-4 md:py-8 w-full flex justify-center">
               <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.3] md:leading-[1.4]">
@@ -191,7 +193,7 @@ export default function Home() {
 
         {/* Recent Analyses Section */}
         {recentAnalyses.length > 0 && (
-          <div className="w-full max-w-5xl mx-auto mt-20 pt-16 border-t border-border">
+          <div className="w-full max-w-6xl mx-auto mt-20 pt-16 border-t border-border">
             <div className="flex flex-col items-center text-center mb-10">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 <Clock className="w-6 h-6 text-primary" /> Riwayat Review Lo

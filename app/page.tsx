@@ -3,7 +3,13 @@
 import React, { useState, useEffect } from "react";
 import DropzoneArea from "../components/DropzoneArea";
 import { CVReviewResult } from "../types";
-import { FileSearch, Sparkles, ArrowRight, Clock } from "lucide-react";
+import {
+  FileSearch,
+  Sparkles,
+  ArrowRight,
+  Clock,
+  CheckCircle2,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -66,20 +72,19 @@ export default function Home() {
       }
 
       if (!response.ok) {
-        let errorMsg = "Terjadi kesalahan saat memproses file.";
+        let errorMsg = "Waduh, ada error pas ngeproses file lu nih.";
         if (data && data.error) {
           errorMsg = data.error;
         } else if (response.status === 413) {
-          errorMsg =
-            "Ukuran file terlalu besar. Harap unggah file yang lebih kecil.";
+          errorMsg = "File-nya kegedean bro. Coba upload yang lebih kecil ya.";
         } else {
-          errorMsg = `Server error (${response.status}): Endpoint tidak mengembalikan JSON yang valid.`;
+          errorMsg = `Server error (${response.status}): Endpoint ngambek, nggak ngasih JSON yang bener.`;
         }
         throw new Error(errorMsg);
       }
 
       if (!data) {
-        throw new Error("Tidak ada data yang dikembalikan oleh server.");
+        throw new Error("Servernya nggak ngirim data apa-apa nih.");
       }
 
       // Save to sessionStorage for immediate view
@@ -105,7 +110,7 @@ export default function Home() {
       router.push("/result");
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "Terjadi kesalahan pada server.");
+      setError(err.message || "Yah, servernya lagi bermasalah.");
     } finally {
       setIsProcessing(false);
     }
@@ -131,7 +136,7 @@ export default function Home() {
               <FileSearch className="w-5 h-5 text-primary-foreground" />
             </div>
             <Link href="/" className="text-xl font-bold tracking-tight">
-              CV<span className="text-primary">.ai</span>
+              CV<span className="text-primary">Lint</span>
             </Link>
           </div>
         </div>
@@ -142,8 +147,9 @@ export default function Home() {
         <div className="w-full max-w-5xl mx-auto flex flex-col items-center text-center space-y-12">
           <div className="space-y-6 mt-4">
             <div className="relative py-4 md:py-8 w-full flex justify-center">
-              <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.3] md:leading-[1.2]">
-                Optimize Your CV for <br className="hidden sm:block" />
+              <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.3] md:leading-[1.4]">
+                Persiapkan CV lu buat
+                <br className="hidden sm:block" />
                 <span className="relative flex justify-center items-center mt-6 md:mt-10 mb-4 md:mb-8">
                   {/* Scratched Text */}
                   <span className="text-muted-foreground/50 text-xl sm:text-3xl md:text-5xl whitespace-nowrap">
@@ -156,22 +162,22 @@ export default function Home() {
                     alt="CrossOut"
                     width={1000}
                     height={100}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] sm:w-[120%] h-auto object-contain z-10 pointer-events-none opacity-80"
+                    className="absolute top-6 md:top-10 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] sm:w-[120%] h-auto object-contain z-10 pointer-events-none opacity-85"
                   />
 
                   {/* Overlay / Stamp Text */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-5deg] z-20 pointer-events-none">
-                    <span className="font-architects text-4xl sm:text-6xl md:text-[6rem] font-black text-secondary whitespace-nowrap drop-shadow-2xl tracking-wide">
-                      Maximum Impact
+                  <div className="absolute -top-4 md:-top-8 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-3deg] z-20 pointer-events-none">
+                    <span className="font-architects underline text-4xl sm:text-6xl md:text-[5rem] font-black text-primary whitespace-nowrap drop-shadow-2xl tracking-wide">
+                      Hasil Maksimal
                     </span>
                   </div>
                 </span>
               </h1>
             </div>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              Get an instant, professional review of your resume. We analyze ATS
-              friendliness, impact metrics, and readability to help you land
-              your dream job.
+              Dapetin review CV instan ala HRD startup. Kita bakal bedah
+              keramahan ATS, impact metrik, dan keterbacaan biar lo makin cepet
+              dapet kerjaan impian!
             </p>
           </div>
 
@@ -195,9 +201,75 @@ export default function Home() {
                   onClick={() => handleFileSelect(selectedFile)}
                   className="w-full mt-6 py-4 bg-primary text-primary-foreground rounded-2xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center"
                 >
-                  Try Again <ArrowRight className="w-4 h-4 ml-2" />
+                  Coba Lagi Yuk <ArrowRight className="w-4 h-4 ml-2" />
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+
+        {/* Joke Pricing Section */}
+        <div className="w-full max-w-3xl mx-auto mt-20 pt-16 border-t border-border/50 text-center pb-8 flex flex-col items-center">
+          <h2 className="text-3xl md:text-4xl font-black mb-12 tracking-tight text-foreground">
+            Pricing Plans
+          </h2>
+
+          <div className="relative w-full max-w-sm mx-auto">
+            {/* Fake Pricing Card */}
+            <Card className="border border-border shadow-sm opacity-60 grayscale transition-all duration-500">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-foreground">
+                  Pro Reviewer
+                </CardTitle>
+                <p className="text-5xl font-black mt-4 text-foreground">
+                  $29
+                  <span className="text-lg font-normal text-muted-foreground">
+                    /mo
+                  </span>
+                </p>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-left space-y-4 mb-8">
+                  <li className="flex items-center gap-3 text-muted-foreground">
+                    <CheckCircle2 className="w-5 h-5 text-primary/50" />{" "}
+                    Unlimited ATS checks
+                  </li>
+                  <li className="flex items-center gap-3 text-muted-foreground">
+                    <CheckCircle2 className="w-5 h-5 text-primary/50" />{" "}
+                    Advanced Metric Analysis
+                  </li>
+                  <li className="flex items-center gap-3 text-muted-foreground">
+                    <CheckCircle2 className="w-5 h-5 text-primary/50" />{" "}
+                    Priority Support 24/7
+                  </li>
+                </ul>
+                <button
+                  className="w-full py-4 bg-muted text-muted-foreground rounded-2xl font-bold cursor-not-allowed"
+                  disabled
+                >
+                  Subscribe Now
+                </button>
+              </CardContent>
+            </Card>
+
+            {/* CrossOut Image */}
+            <Image
+              src="/images/CrossOut.png"
+              alt="CrossOut"
+              width={600}
+              height={600}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] md:w-[150%] h-auto object-contain z-10 pointer-events-none opacity-90"
+            />
+
+            {/* Joke Text */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[30%] md:-translate-y-1/2 rotate-[-4deg] z-20 pointer-events-none w-[110%] md:w-[130%] text-center">
+              <span className="font-architects text-2xl md:text-3xl font-black text-primary drop-shadow-xl leading-relaxed block bg-background/95 px-6 py-4 rounded-3xl border-2 border-primary/20 shadow-lg transform transition-transform hover:scale-105">
+                Bercanda, kita 100% GRATIS!
+                <br />
+                <span className="text-lg md:text-xl text-muted-foreground">
+                  (Ngapain bayar, lagian kita gapake dolar)
+                </span>
+              </span>
             </div>
           </div>
         </div>
@@ -207,11 +279,11 @@ export default function Home() {
           <div className="w-full max-w-5xl mx-auto mt-20 pt-16 border-t border-border">
             <div className="flex flex-col items-center text-center mb-10">
               <h2 className="text-2xl font-bold flex items-center gap-2">
-                <Clock className="w-6 h-6 text-primary" /> Recent Analyses
+                <Clock className="w-6 h-6 text-primary" /> Riwayat Review Lo
               </h2>
               <p className="text-sm text-muted-foreground mt-2 max-w-md">
-                To keep your privacy. This history will be{" "}
-                <strong>removed in 24 hours</strong>.
+                Biar privasi aman sentosa, riwayat ini bakal otomatis{" "}
+                <strong>ilang dalam 24 jam</strong> ya bro.
               </p>
             </div>
 

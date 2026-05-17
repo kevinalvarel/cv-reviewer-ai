@@ -32,7 +32,7 @@ export default function ReviewResult({ result }: ReviewResultProps) {
         <Card className="h-full border-border bg-card shadow-sm rounded-[2rem]">
           <CardHeader>
             <CardTitle className="text-sm font-bold uppercase tracking-widest text-primary">
-              Executive Summary
+              Intinya Gini
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -49,13 +49,13 @@ export default function ReviewResult({ result }: ReviewResultProps) {
           <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-black/10 rounded-full blur-2xl"></div>
           
           <h3 className="text-xs font-bold uppercase tracking-widest text-primary-foreground/70 mb-2 relative z-10">
-            Overall Score
+            Skor Keseluruhan
           </h3>
           <span className="text-7xl font-black relative z-10 tracking-tighter">
             {result.score}
           </span>
           <span className="text-sm font-medium text-primary-foreground/70 mt-2 relative z-10">
-            Out of 100
+            Dari 100
           </span>
         </Card>
       </div>
@@ -63,7 +63,7 @@ export default function ReviewResult({ result }: ReviewResultProps) {
       {/* Metrics Row */}
       <div className="lg:col-span-4 flex flex-col">
         <MetricCard 
-          title="ATS Friendliness" 
+          title="Keramahan ATS" 
           icon={<LayoutTemplate className="w-5 h-5 text-indigo-500" />}
           score={result.atsFriendliness.score}
           feedback={result.atsFriendliness.feedback}
@@ -75,7 +75,7 @@ export default function ReviewResult({ result }: ReviewResultProps) {
 
       <div className="lg:col-span-4 flex flex-col">
         <MetricCard 
-          title="Impact & Metrics" 
+          title="Impact & Metrik" 
           icon={<TrendingUp className="w-5 h-5 text-emerald-500" />}
           score={result.impactAndMetrics.score}
           feedback={result.impactAndMetrics.feedback}
@@ -87,7 +87,7 @@ export default function ReviewResult({ result }: ReviewResultProps) {
 
       <div className="lg:col-span-4 flex flex-col">
         <MetricCard 
-          title="Structure & Readability" 
+          title="Struktur & Keterbacaan" 
           icon={<CheckCircle2 className="w-5 h-5 text-amber-500" />}
           score={result.structureAndReadability.score}
           feedback={result.structureAndReadability.feedback}
@@ -133,7 +133,7 @@ function MetricCard({ title, icon, score, feedback, issues, getScoreColor, getSc
           <div className="space-y-3 pt-4 border-t border-border">
             <h4 className="text-[11px] font-bold uppercase tracking-widest text-destructive flex items-center">
               <AlertCircle className="w-3.5 h-3.5 mr-1.5" />
-              Saran Perbaikan
+              Biar Makin Kece
             </h4>
             <ul className="space-y-2">
               {issues.map((issue: string, idx: number) => (

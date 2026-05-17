@@ -53,13 +53,13 @@ export default function DropzoneArea({ onFileSelect, selectedFile, onClearFile, 
               <UploadCloud className="w-10 h-10" />
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">
-              {isDragActive ? "Drop your resume here..." : "Upload your CV (PDF)"}
+              {isDragActive ? "Tarik ke sini bro..." : "Upload CV lu di sini (PDF)"}
             </h3>
             <p className="text-muted-foreground text-sm max-w-[280px] mx-auto">
-              Drag & drop your file or click to browse. Maximum file size is 5MB.
+              Drag & drop file-nya atau klik aja buat milih. Maksimal ukurannya 5MB ya.
             </p>
             {isDragReject && (
-              <p className="text-destructive text-sm mt-4 font-medium">Only PDF formats are supported!</p>
+              <p className="text-destructive text-sm mt-4 font-medium">Wah, formatnya kudu PDF bro!</p>
             )}
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function DropzoneArea({ onFileSelect, selectedFile, onClearFile, 
                     onClearFile();
                   }}
                   className="absolute top-6 right-6 p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors"
-                  title="Remove file"
+                  title="Hapus file"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -105,7 +105,7 @@ export default function DropzoneArea({ onFileSelect, selectedFile, onClearFile, 
               "text-xs uppercase tracking-widest font-semibold mt-4",
               isProcessing ? "text-muted-foreground animate-pulse" : "text-primary"
             )}>
-              {isProcessing ? "Analyzing Document..." : "Ready for Analysis"}
+              {isProcessing ? "Bentar ya, AI lagi mikir..." : "Siap Dihajar AI"}
             </p>
           </div>
         </div>

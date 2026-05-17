@@ -2,14 +2,14 @@ import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
 const systemInstruction = `
-Kamu adalah seorang Senior Tech Recruiter dan Pakar ATS (Applicant Tracking System) profesional. Tugasmu adalah menganalisis CV yang diunggah oleh pengguna secara kritis, objektif, dan memberikan umpan balik yang membangun (constructive feedback).
+Kamu adalah seorang Senior Tech Recruiter dan Pakar ATS (Applicant Tracking System) yang asik dan gaul banget. Tugasmu adalah nge-roasting tapi tetap ngebangun (constructive feedback) CV yang di-upload sama user.
 
 Analisis CV berdasarkan kriteria berikut:
-1. ATS Friendliness: Apakah formatnya mudah dibaca oleh mesin skrinning (hindari grafik berlebihan, layout dua kolom yang membingungkan, penggunaan ikon sebagai pengganti teks).
-2. Dampak (Impact & Metrics): Apakah pengalaman kerja ditulis menggunakan Action Verbs dan menyertakan hasil yang terukur (misal: "meningkatkan konversi sebesar 15%"), bukan sekadar daftar tugas harian.
-3. Struktur & Keterbacaan: Kejelasan riwayat pekerjaan, pendidikan, dan penulisan skill yang relevan.
+1. ATS Friendliness: Gimana nih formatnya? Gampang dibaca mesin ATS nggak? (kasih tau kalo grafiknya lebay, layout dua kolom bikin pusing, atau icon menuh-menuhin doang).
+2. Dampak (Impact & Metrics): Pengalaman kerjanya udah pake Action Verbs belum? Ada angka metriknya nggak? (misal: "naikin konversi 15%"), jangan cuma curhat kerjaan tiap hari doang.
+3. Struktur & Keterbacaan: Enak diliat nggak riwayat kerja, pendidikan, sama skill-nya?
 
-Kamu HARUS mengeluarkan analisis dalam format JSON yang valid. Jangan berikan teks apapun di luar blok JSON. Gunakan bahasa Indonesia yang profesional namun mudah dipahami.
+Kamu HARUS ngeluarin analisis dalam format JSON yang valid. Jangan ngasih teks apa pun di luar blok JSON. Gunakan bahasa Indonesia yang santai, gaul (kayak pake lo-gue atau bahasa tongkrongan tech), tapi tetep ngena dan profesional poinnya.
 `;
 
 const responseSchema = {
@@ -69,16 +69,16 @@ export async function POST(req: NextRequest) {
     const file = formData.get("file") as File | null;
 
     if (!file) {
-      return NextResponse.json({ error: "File tidak ditemukan" }, { status: 400 });
+      return NextResponse.json({ error: "Bro, filenya mana nih? Nggak ketemu." }, { status: 400 });
     }
 
     if (file.type !== "application/pdf") {
-      return NextResponse.json({ error: "File harus berformat PDF" }, { status: 400 });
+      return NextResponse.json({ error: "Formatnya kudu PDF ya, yang lain nggak mempan." }, { status: 400 });
     }
 
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: "Ukuran file maksimal 5MB" }, { status: 400 });
+      return NextResponse.json({ error: "Kegedean filenya bro, maksimal 5MB aja." }, { status: 400 });
     }
 
     // Convert file to base64
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey || apiKey === 'MY_GEMINI_API_KEY') {
-      return NextResponse.json({ error: "API Key Gemini tidak ditemukan atau tidak valid. Silakan konfigurasikan GEMINI_API_KEY di pengaturan" }, { status: 500 });
+      return NextResponse.json({ error: "API Key-nya zonk nih bro. Coba benerin dulu GEMINI_API_KEY-nya." }, { status: 500 });
     }
 
     const ai = new GoogleGenAI({ apiKey });
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
 
     const outputText = response.text;
     if (!outputText) {
-      throw new Error("Tidak ada respons dari AI.");
+      throw new Error("AI-nya lagi bengong, nggak ada respons.");
     }
 
     // Attempt to parse JSON strictly
@@ -130,13 +130,13 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("Error analyzing CV:", error);
     
-    let errorMessage = "Terjadi kesalahan saat memproses CV. Silakan coba lagi.";
+    let errorMessage = "Waduh, server lagi ngambek pas ngeproses CV lo. Coba lagi ya.";
     if (error.message?.includes("API Key not found") || error.message?.includes("API_KEY_INVALID")) {
-       errorMessage = "API Key tidak valid atau tidak ditemukan. Silakan tambahkan GEMINI_API_KEY yang benar.";
+       errorMessage = "API Key-nya zonk nih bro. Coba benerin dulu GEMINI_API_KEY-nya.";
     } else if (error.status === 429 || error.message?.includes("Quota exceeded") || error.message?.includes("RESOURCE_EXHAUSTED")) {
-       errorMessage = "Limit kuota API Gemini telah tercapai. Silakan coba lagi nanti atau periksa paket penagihan Anda.";
+       errorMessage = "Yah, kuota API Gemini lo abis. Top up dulu gih atau ntar coba lagi.";
     } else if (error.status === 404 || error.message?.includes("not found")) {
-       errorMessage = "Model AI yang diminta tidak ditemukan atau tidak tersedia. Silakan periksa konfigurasi model.";
+       errorMessage = "AI model yang diminta nggak ada nih, coba cek konfigurasinya lagi.";
     }
 
     return NextResponse.json(

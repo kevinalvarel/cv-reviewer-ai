@@ -3,19 +3,14 @@
 import React, { useState, useEffect } from "react";
 import DropzoneArea from "../components/DropzoneArea";
 import { CVReviewResult } from "../types";
-import {
-  FileSearch,
-  Sparkles,
-  ArrowRight,
-  Clock,
-  CheckCircle2,
-} from "lucide-react";
-import Link from "next/link";
+import { ArrowRight, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import FAQSection from "../components/FAQSection";
 import { cn } from "../components/DropzoneArea"; // Reusing cn utility
 import Image from "next/image";
+import Pricing from "@/components/Pricing";
 
 interface RecentAnalysis {
   id: number;
@@ -128,20 +123,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans pb-16">
-      {/* Navbar */}
-      <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full">
-        <div className="container flex h-16 items-center mx-auto px-4 md:px-8 max-w-7xl">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <FileSearch className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <Link href="/" className="text-xl font-bold tracking-tight">
-              CV<span className="text-primary">Lint</span>
-            </Link>
-          </div>
-        </div>
-      </header>
-
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-start pt-12 px-4 md:px-8">
         <div className="w-full max-w-5xl mx-auto flex flex-col items-center text-center space-y-12">
@@ -152,7 +133,7 @@ export default function Home() {
                 <br className="hidden sm:block" />
                 <span className="relative flex justify-center items-center mt-6 md:mt-10 mb-4 md:mb-8">
                   {/* Scratched Text */}
-                  <span className="text-muted-foreground/50 text-xl sm:text-3xl md:text-5xl whitespace-nowrap">
+                  <span className="text-muted-foreground/90 text-xl sm:text-3xl md:text-5xl whitespace-nowrap">
                     19 Juta Lapangan Pekerjaan
                   </span>
 
@@ -162,13 +143,13 @@ export default function Home() {
                     alt="CrossOut"
                     width={1000}
                     height={100}
-                    className="absolute top-6 md:top-10 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] sm:w-[120%] h-auto object-contain z-10 pointer-events-none opacity-85"
+                    className="absolute top-6 md:top-10 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] sm:w-[120%] h-auto object-contain z-10 pointer-events-none opacity-95"
                   />
 
                   {/* Overlay / Stamp Text */}
                   <div className="absolute -top-4 md:-top-8 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-3deg] z-20 pointer-events-none">
                     <span className="font-architects underline text-4xl sm:text-6xl md:text-[5rem] font-black text-primary whitespace-nowrap drop-shadow-2xl tracking-wide">
-                      Hasil Maksimal
+                      Hasil yang Maksimal
                     </span>
                   </div>
                 </span>
@@ -204,72 +185,6 @@ export default function Home() {
                   Coba Lagi Yuk <ArrowRight className="w-4 h-4 ml-2" />
                 </button>
               )}
-            </div>
-          </div>
-        </div>
-
-        {/* Joke Pricing Section */}
-        <div className="w-full max-w-3xl mx-auto mt-20 pt-16 border-t border-border/50 text-center pb-8 flex flex-col items-center">
-          <h2 className="text-3xl md:text-4xl font-black mb-12 tracking-tight text-foreground">
-            Pricing Plans
-          </h2>
-
-          <div className="relative w-full max-w-sm mx-auto">
-            {/* Fake Pricing Card */}
-            <Card className="border border-border shadow-sm opacity-60 grayscale transition-all duration-500">
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold text-foreground">
-                  Pro Reviewer
-                </CardTitle>
-                <p className="text-5xl font-black mt-4 text-foreground">
-                  $29
-                  <span className="text-lg font-normal text-muted-foreground">
-                    /mo
-                  </span>
-                </p>
-              </CardHeader>
-              <CardContent>
-                <ul className="text-left space-y-4 mb-8">
-                  <li className="flex items-center gap-3 text-muted-foreground">
-                    <CheckCircle2 className="w-5 h-5 text-primary/50" />{" "}
-                    Unlimited ATS checks
-                  </li>
-                  <li className="flex items-center gap-3 text-muted-foreground">
-                    <CheckCircle2 className="w-5 h-5 text-primary/50" />{" "}
-                    Advanced Metric Analysis
-                  </li>
-                  <li className="flex items-center gap-3 text-muted-foreground">
-                    <CheckCircle2 className="w-5 h-5 text-primary/50" />{" "}
-                    Priority Support 24/7
-                  </li>
-                </ul>
-                <button
-                  className="w-full py-4 bg-muted text-muted-foreground rounded-2xl font-bold cursor-not-allowed"
-                  disabled
-                >
-                  Subscribe Now
-                </button>
-              </CardContent>
-            </Card>
-
-            {/* CrossOut Image */}
-            <Image
-              src="/images/CrossOut.png"
-              alt="CrossOut"
-              width={600}
-              height={600}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] md:w-[150%] h-auto object-contain z-10 pointer-events-none opacity-90"
-            />
-
-            {/* Joke Text */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[30%] md:-translate-y-1/2 rotate-[-4deg] z-20 pointer-events-none w-[110%] md:w-[130%] text-center">
-              <span className="font-architects text-2xl md:text-3xl font-black text-primary drop-shadow-xl leading-relaxed block bg-background/95 px-6 py-4 rounded-3xl border-2 border-primary/20 shadow-lg transform transition-transform hover:scale-105">
-                Bercanda, kita 100% GRATIS!
-                <br />
-                <span className="text-lg md:text-xl text-muted-foreground">
-                  (Ngapain bayar, lagian kita gapake dolar)
-                </span>
-              </span>
             </div>
           </div>
         </div>
@@ -330,6 +245,11 @@ export default function Home() {
             </div>
           </div>
         )}
+        {/* Joke Pricing Section */}
+        <Pricing />
+
+        {/* FAQ Section */}
+        <FAQSection />
       </main>
     </div>
   );

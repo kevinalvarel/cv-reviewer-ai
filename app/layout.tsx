@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Architects_Daughter, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 const architects = Architects_Daughter({
   subsets: ["latin"],
@@ -11,7 +12,7 @@ const architects = Architects_Daughter({
 });
 
 export const metadata: Metadata = {
-  title: "CV Reviewer AI",
+  title: "CVLint",
   description:
     "AI-powered CV analysis tool focusing on ATS friendliness, impact metrics, and readability.",
 };
@@ -26,8 +27,12 @@ export default function RootLayout({
       lang="en"
       className={cn("font-sans", geist.variable, architects.variable)}
     >
-      <body className="font-sans antialiased" suppressHydrationWarning>
-        {children}
+      <body className="font-sans antialiased min-h-screen flex flex-col" suppressHydrationWarning>
+        <Navbar />
+        <main className="flex-1 flex flex-col">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

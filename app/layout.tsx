@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Architects_Daughter, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/contexts/AuthContext";
+
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 const architects = Architects_Daughter({
   subsets: ["latin"],
@@ -31,8 +32,10 @@ export default function RootLayout({
         className="font-sans antialiased min-h-screen flex flex-col"
         suppressHydrationWarning
       >
-        <main className="flex-1 flex flex-col">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <main className="flex-1 flex flex-col">{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

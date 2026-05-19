@@ -154,25 +154,34 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // ── 2. Rate limit check ──
-    const identifier = uid || hashIP(
-      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-        req.headers.get("x-real-ip") ||
-        "unknown",
-    );
-    const type = uid ? "authenticated" : "anonymous";
+    // ── 2. Rate limit check (graceful degradation if Firestore unavailable) ──
+    let remaining = -1; // -1 = rate limiting skipped
+    try {
+      const identifier =
+        uid ||
+        hashIP(
+          req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+            req.headers.get("x-real-ip") ||
+            "unknown",
+        );
+      const type = uid ? "authenticated" : "anonymous";
 
-    const { allowed, remaining } = await checkAndIncrementRateLimit(
-      identifier,
-      type,
-    );
+      const rateResult = await checkAndIncrementRateLimit(identifier, type);
+      remaining = rateResult.remaining;
 
-    if (!allowed) {
-      const message =
-        type === "anonymous"
-          ? "Jatah review hari ini udah habis (2x/hari). Login biar dapet 5x/hari!"
-          : "Udah mentok 5x review hari ini bro. Cobain lagi besok ya!";
-      return NextResponse.json({ error: message }, { status: 429 });
+      if (!rateResult.allowed) {
+        const message =
+          type === "anonymous"
+            ? "Jatah review hari ini udah habis (2x/hari). Login biar dapet 5x/hari!"
+            : "Udah mentok 5x review hari ini bro. Cobain lagi besok ya!";
+        return NextResponse.json({ error: message }, { status: 429 });
+      }
+    } catch (rateLimitError) {
+      console.warn(
+        "Rate limiting unavailable (Firestore issue), skipping:",
+        rateLimitError instanceof Error ? rateLimitError.message : rateLimitError,
+      );
+      // Continue without rate limiting — Firestore may not be set up yet
     }
 
     // ── 3. File validation ──
@@ -254,28 +263,36 @@ export async function POST(req: NextRequest) {
     let analysisId: string | null = null;
 
     if (uid) {
-      const analysisRef = getAdminDb()
-        .collection("users")
-        .doc(uid)
-        .collection("analyses")
-        .doc();
-      analysisId = analysisRef.id;
+      try {
+        const analysisRef = getAdminDb()
+          .collection("users")
+          .doc(uid)
+          .collection("analyses")
+          .doc();
+        analysisId = analysisRef.id;
 
-      await analysisRef.set({
-        filename: file.name,
-        createdAt: FieldValue.serverTimestamp(),
-        score: parsedData.score,
-        atsFriendliness: parsedData.atsFriendliness,
-        impactAndMetrics: parsedData.impactAndMetrics,
-        structureAndReadability: parsedData.structureAndReadability,
-        overallSummary: parsedData.overallSummary,
-      });
+        await analysisRef.set({
+          filename: file.name,
+          createdAt: FieldValue.serverTimestamp(),
+          score: parsedData.score,
+          atsFriendliness: parsedData.atsFriendliness,
+          impactAndMetrics: parsedData.impactAndMetrics,
+          structureAndReadability: parsedData.structureAndReadability,
+          overallSummary: parsedData.overallSummary,
+        });
 
-      // Increment user's analysis count
-      const userRef = getAdminDb().collection("users").doc(uid);
-      await userRef.update({
-        analysisCount: FieldValue.increment(1),
-      });
+        // Increment user's analysis count
+        const userRef = getAdminDb().collection("users").doc(uid);
+        await userRef.update({
+          analysisCount: FieldValue.increment(1),
+        });
+      } catch (saveError) {
+        console.warn(
+          "Failed to save analysis to Firestore, skipping:",
+          saveError instanceof Error ? saveError.message : saveError,
+        );
+        // Analysis still succeeded — just won't be saved to history
+      }
     }
 
     return NextResponse.json({
@@ -303,7 +320,8 @@ export async function POST(req: NextRequest) {
         "Yah, kuota API Gemini lo abis. Top up dulu gih atau ntar coba lagi.";
     } else if (
       error.status === 404 ||
-      error.message?.includes("not found")
+      error.message?.toLowerCase().includes("not found") ||
+      error.message?.includes("NOT_FOUND")
     ) {
       errorMessage =
         "AI model yang diminta nggak ada nih, coba cek konfigurasinya lagi.";

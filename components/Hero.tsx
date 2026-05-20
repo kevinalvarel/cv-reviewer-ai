@@ -23,7 +23,7 @@ const containerVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.18,
+      staggerChildren: 0.1,
       delayChildren: 0.1,
     },
   },
@@ -135,9 +135,9 @@ export default function Hero({
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto"
           variants={fadeSlideUp}
         >
-          Dapetin review CV instan ala HRD startup. Kita bakal bedah
-          keramahan ATS, impact metrik, dan keterbacaan biar lo makin cepet
-          dapet kerjaan impian!
+          Dapetin review CV instan ala HRD startup. Kita bakal bedah keramahan
+          ATS, impact metrik, dan keterbacaan biar lo makin cepet dapet kerjaan
+          impian!
         </motion.p>
       </motion.div>
 

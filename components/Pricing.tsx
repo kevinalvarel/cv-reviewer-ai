@@ -20,7 +20,7 @@ const pricingPlans = [
     price: "$0",
     features: [
       { text: "1x ATS check / bulan", active: true },
-      { text: "Advanced Metric Analysis", active: false },
+      { text: "Reviewer Makin Jago", active: false },
       { text: "Priority Support", active: false },
     ],
     isPopular: false,
@@ -31,7 +31,7 @@ const pricingPlans = [
     price: "$19jt",
     features: [
       { text: "Unlimited ATS checks", active: true },
-      { text: "Advanced Metric Analysis", active: true },
+      { text: "Reviewer Makin Jago Banget", active: true },
       { text: "24/7 Human Support", active: false },
     ],
     isPopular: true,
@@ -174,7 +174,9 @@ export default function Pricing() {
                           <CheckCircle2
                             className={cn(
                               "w-5 h-5 shrink-0 mt-0.5",
-                              plan.isPopular ? "text-primary" : "text-primary/50",
+                              plan.isPopular
+                                ? "text-primary"
+                                : "text-primary/50",
                             )}
                           />
                         ) : (

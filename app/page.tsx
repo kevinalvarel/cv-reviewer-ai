@@ -2,15 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  collection,
-  query,
-  orderBy,
-  limit,
-  getDocs,
-} from "firebase/firestore";
-import { getClientDb } from "@/lib/firebase";
-import { useAuth } from "@/contexts/AuthContext";
+import { saveAnalysis, getAnalyses } from "@/lib/storage";
 import FAQSection from "../components/FAQSection";
 import Pricing from "@/components/Pricing";
 import Navbar from "@/components/Navbar";
@@ -23,47 +15,12 @@ export default function Home() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [recentAnalyses, setRecentAnalyses] = useState<RecentAnalysis[]>([]);
-  const { user } = useAuth();
   const router = useRouter();
 
-  // Fetch recent analyses from Firestore for authenticated users
+  // Load recent analyses from localStorage
   useEffect(() => {
-    if (!user) {
-      setRecentAnalyses([]);
-      return;
-    }
-
-    const fetchRecent = async () => {
-      try {
-        const db = getClientDb();
-        const analysesRef = collection(db, "users", user.uid, "analyses");
-        const q = query(analysesRef, orderBy("createdAt", "desc"), limit(6));
-        const snapshot = await getDocs(q);
-
-        const recent: RecentAnalysis[] = snapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            filename: data.filename,
-            timestamp: data.createdAt?.toMillis?.() || Date.now(),
-            result: {
-              score: data.score,
-              atsFriendliness: data.atsFriendliness,
-              impactAndMetrics: data.impactAndMetrics,
-              structureAndReadability: data.structureAndReadability,
-              overallSummary: data.overallSummary,
-            },
-          };
-        });
-
-        setRecentAnalyses(recent);
-      } catch (e) {
-        console.error("Error fetching recent analyses", e);
-      }
-    };
-
-    fetchRecent();
-  }, [user]);
+    setRecentAnalyses(getAnalyses());
+  }, []);
 
   const handleFileSelect = async (file: File) => {
     setSelectedFile(file);
@@ -74,17 +31,9 @@ export default function Home() {
     formData.append("file", file);
 
     try {
-      // Build headers with auth token if available
-      const headers: Record<string, string> = {};
-      if (user) {
-        const token = await user.getIdToken();
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-
       const response = await fetch("/api/review", {
         method: "POST",
         body: formData,
-        headers,
       });
 
       const contentType = response.headers.get("content-type");
@@ -110,14 +59,9 @@ export default function Home() {
         throw new Error("Servernya nggak ngirim data apa-apa nih.");
       }
 
-      // If user is authenticated and got an analysisId, navigate to it
-      if (user && data.analysisId) {
-        router.push(`/result/${data.analysisId}`);
-      } else {
-        // Guest: store in sessionStorage and navigate to guest result
-        sessionStorage.setItem("cv_review_result", JSON.stringify(data));
-        router.push("/result/guest");
-      }
+      // Save to localStorage and navigate to result
+      const analysisId = saveAnalysis(file.name, data);
+      router.push(`/result/${analysisId}`);
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Yah, servernya lagi bermasalah.");

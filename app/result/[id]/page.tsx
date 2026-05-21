@@ -2,9 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { doc, getDoc } from "firebase/firestore";
-import { getClientDb } from "@/lib/firebase";
-import { useAuth } from "@/contexts/AuthContext";
+import { getAnalysisById } from "@/lib/storage";
 import ReviewResult from "@/components/ReviewResult";
 import { CVReviewResult } from "@/types";
 import { ArrowLeft, FileSearch, Loader2 } from "lucide-react";
@@ -15,75 +13,26 @@ export default function ResultPage() {
   const [result, setResult] = useState<CVReviewResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const params = useParams();
   const analysisId = params.id as string;
 
   useEffect(() => {
-    if (authLoading) return;
+    // Look up the analysis from localStorage
+    const analysis = getAnalysisById(analysisId);
 
-    // Guest result — read from sessionStorage
-    if (analysisId === "guest") {
-      const data = sessionStorage.getItem("cv_review_result");
-      if (data) {
-        try {
-          setResult(JSON.parse(data));
-        } catch {
-          setError("Gagal membaca hasil analisis.");
-        }
-      } else {
-        setError("Hasil analisis nggak ketemu. Coba upload ulang ya.");
-      }
-      setLoading(false);
-      return;
+    if (analysis) {
+      setResult(analysis.result);
+    } else {
+      setError(
+        "Hasil analisis nggak ketemu. Mungkin udah lewat 24 jam atau belum pernah dianalisis.",
+      );
     }
 
-    // Authenticated result — fetch from Firestore
-    if (!user) {
-      setError("Login dulu biar bisa liat hasil analisis ini.");
-      setLoading(false);
-      return;
-    }
+    setLoading(false);
+  }, [analysisId]);
 
-    const fetchResult = async () => {
-      try {
-        const db = getClientDb();
-        const docRef = doc(
-          db,
-          "users",
-          user.uid,
-          "analyses",
-          analysisId,
-        );
-        const docSnap = await getDoc(docRef);
-
-        if (!docSnap.exists()) {
-          setError("Analisis nggak ditemukan. Mungkin udah dihapus atau bukan punya lo.");
-          setLoading(false);
-          return;
-        }
-
-        const data = docSnap.data();
-        setResult({
-          score: data.score,
-          atsFriendliness: data.atsFriendliness,
-          impactAndMetrics: data.impactAndMetrics,
-          structureAndReadability: data.structureAndReadability,
-          overallSummary: data.overallSummary,
-        });
-      } catch (e) {
-        console.error("Error fetching analysis:", e);
-        setError("Gagal ngambil data analisis dari server.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchResult();
-  }, [analysisId, user, authLoading]);
-
-  if (loading || authLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">

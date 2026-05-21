@@ -29,3 +29,5 @@ Thumbs.db
 README.md
 .antigravitycli/
 coverage/
+deploy.sh
+deploy.ps1

@@ -9,7 +9,7 @@ import {
   limit,
   getDocs,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { getClientDb } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import FAQSection from "../components/FAQSection";
 import Pricing from "@/components/Pricing";
@@ -35,6 +35,7 @@ export default function Home() {
 
     const fetchRecent = async () => {
       try {
+        const db = getClientDb();
         const analysesRef = collection(db, "users", user.uid, "analyses");
         const q = query(analysesRef, orderBy("createdAt", "desc"), limit(6));
         const snapshot = await getDocs(q);

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { getClientDb } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import ReviewResult from "@/components/ReviewResult";
 import { CVReviewResult } from "@/types";
@@ -48,6 +48,7 @@ export default function ResultPage() {
 
     const fetchResult = async () => {
       try {
+        const db = getClientDb();
         const docRef = doc(
           db,
           "users",
